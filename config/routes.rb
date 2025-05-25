@@ -1,14 +1,24 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+    # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
+  
+  # Hauptseiten mit Zeitraum-Parametern
+  root 'leaderboard#index'
+  get 'leaderboard/:period', to: 'leaderboard#index', as: 'leaderboard_period',
+      constraints: { period: /today|week|all/ }
+  
+  # Member routes - einfacher aufgebaut
+  get 'members/:username', to: 'members#show', as: 'member'
+  get 'members/:username/:period', to: 'members#show', as: 'member_period',
+      constraints: { period: /today|week|all/ }
+  
+  # Admin-Bereich
+  namespace :admin do
+    resources :item_values, only: [:index, :edit, :update]
+    post 'sync_now', to: 'sync#create'
+  end
+  
+  get 'health', to: 'application#health'
 end

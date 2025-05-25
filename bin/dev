@@ -1,2 +1,9 @@
 #!/usr/bin/env ruby
+
+sidekiq_pid = spawn("bundle exec sidekiq")
+
 exec "./bin/rails", "server", "-b", "0.0.0.0", "-p", "3001", *ARGV
+
+at_exit do
+  Process.kill("TERM", sidekiq_pid) rescue nil
+end

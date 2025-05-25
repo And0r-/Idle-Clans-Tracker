@@ -66,6 +66,7 @@ end
 
 # Background Jobs
 gem 'sidekiq'
+gem 'sidekiq-cron'
 
 # Environment Variables
 gem 'dotenv-rails'

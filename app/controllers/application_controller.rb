@@ -1,4 +1,10 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  before_action :set_last_api_fetch
+  
+  private
+  
+  def set_last_api_fetch
+    @last_api_fetch = ApiStatus.first&.last_fetch_at
+    @api_status = ApiStatus.first&.status
+  end
 end

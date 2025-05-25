@@ -1,0 +1,185 @@
+<div class="row">
+  <div class="col-12">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>👤 <%= @member.username %></h1>
+      <%= link_to "← Zurück zur Rangliste", root_path, class: "btn btn-outline-secondary" %>
+    </div>
+    
+    <!-- Zeitraum-Navigation -->
+    <ul class="nav nav-pills mb-4">
+    <li class="nav-item">
+        <%= link_to "Heute", member_period_path(@member.username, 'today'), 
+            class: "nav-link #{'active' if @period == :today}" %>
+    </li>
+    <li class="nav-item">
+        <%= link_to "Diese Woche", member_period_path(@member.username, 'week'), 
+            class: "nav-link #{'active' if @period == :week}" %>
+    </li>
+    <li class="nav-item">
+        <%= link_to "Alle Zeit", member_path(@member.username), 
+            class: "nav-link #{'active' if @period == :all}" %>
+    </li>
+    </ul>
+    
+    <!-- Statistiken -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card bg-success text-white">
+          <div class="card-body text-center">
+            <h5>Punkte (Zeitraum)</h5>
+            <h2><%= number_with_delimiter(@period_points.to_i) %></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body text-center">
+            <h5>Punkte (Gesamt)</h5>
+            <h2><%= number_with_delimiter(@member.total_points.to_i) %></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-info text-white">
+          <div class="card-body text-center">
+            <h5>Spenden</h5>
+            <h2><%= @deposits.count %></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-warning text-white">
+          <div class="card-body text-center">
+            <h5>Abhebungen</h5>
+            <h2><%= @withdraws.count %></h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabs für Spenden/Abhebungen -->
+    <ul class="nav nav-tabs mb-3" id="transactionTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="deposits-tab" data-bs-toggle="tab" data-bs-target="#deposits" type="button">
+          💰 Spenden (<%= @deposits.count %>)
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="withdraws-tab" data-bs-toggle="tab" data-bs-target="#withdraws" type="button">
+          📤 Abhebungen (<%= @withdraws.count %>)
+        </button>
+      </li>
+    </ul>
+    
+    <div class="tab-content" id="transactionTabsContent">
+      <!-- Spenden Tab -->
+      <div class="tab-pane fade show active" id="deposits" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">💰 Spenden</h5>
+          </div>
+          <div class="card-body">
+            <% if @deposits.any? %>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Datum</th>
+                      <th>Item</th>
+                      <th class="text-end">Anzahl</th>
+                      <th class="text-end">Punkte</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @deposits.each do |donation| %>
+                      <tr>
+                        <td>
+                          <small class="text-muted">
+                            <%= l(donation.occurred_at.in_time_zone('Europe/Zurich'), format: :short) %>
+                          </small>
+                        </td>
+                        <td>
+                          <span class="badge bg-light text-dark">
+                            <%= donation.item_name %>
+                          </span>
+                        </td>
+                        <td class="text-end">
+                          <%= number_with_delimiter(donation.quantity) %>x
+                        </td>
+                        <td class="text-end">
+                          <span class="text-success fw-bold">
+                            +<%= number_with_delimiter(donation.points_value.to_i) %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <div class="alert alert-info">
+                <h6>Keine Spenden gefunden</h6>
+                <p class="mb-0">Für den gewählten Zeitraum wurden keine Spenden gemacht.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Abhebungen Tab -->
+      <div class="tab-pane fade" id="withdraws" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">📤 Abhebungen</h5>
+          </div>
+          <div class="card-body">
+            <% if @withdraws.any? %>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Datum</th>
+                      <th>Item</th>
+                      <th class="text-end">Anzahl</th>
+                      <th class="text-end">Punkte</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @withdraws.each do |donation| %>
+                      <tr>
+                        <td>
+                          <small class="text-muted">
+                            <%= l(donation.occurred_at.in_time_zone('Europe/Zurich'), format: :short) %>
+                          </small>
+                        </td>
+                        <td>
+                          <span class="badge bg-light text-dark">
+                            <%= donation.item_name %>
+                          </span>
+                        </td>
+                        <td class="text-end">
+                          <%= number_with_delimiter(donation.quantity) %>x
+                        </td>
+                        <td class="text-end">
+                          <span class="text-danger">
+                            -<%= number_with_delimiter(donation.points_value.to_i) %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <div class="alert alert-info">
+                <h6>Keine Abhebungen gefunden</h6>
+                <p class="mb-0">Für den gewählten Zeitraum wurden keine Abhebungen gemacht.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

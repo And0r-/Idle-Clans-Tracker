@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  last_fetch_at: 2025-05-25 19:06:11
+  status: MyString
+  logs_imported: 1
+
+two:
+  last_fetch_at: 2025-05-25 19:06:11
+  status: MyString
+  logs_imported: 1

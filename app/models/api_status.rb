@@ -1,0 +1,2 @@
+class ApiStatus < ApplicationRecord
+end

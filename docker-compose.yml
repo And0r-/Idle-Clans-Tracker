@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  app:
+    image: ruby:3.2
+    container_name: idle_clans_app
+    working_dir: /app
+    command: >
+      bash -c "
+        apt-get update -qq && apt-get install -y postgresql-client curl &&
+        bundle config set --local deployment 'true' &&
+        bundle config set --local without 'development test' &&
+        bundle install &&
+        RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile &&
+        bundle exec rails server -b 0.0.0.0
+      "
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      CLAN_NAME: ${CLAN_NAME:-RosaEinhorn}
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - app_storage:/app/storage
+    networks:
+      - idle_clans_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  sidekiq:
+    image: ruby:3.2
+    container_name: idle_clans_sidekiq
+    working_dir: /app
+    command: >
+      bash -c "
+        apt-get update -qq && apt-get install -y postgresql-client &&
+        bundle config set --local deployment 'true' &&
+        bundle config set --local without 'development test' &&
+        bundle install &&
+        bundle exec sidekiq
+      "
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      CLAN_NAME: ${CLAN_NAME:-RosaEinhorn}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - app_storage:/app/storage
+    networks:
+      - idle_clans_network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: idle_clans_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - idle_clans_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: idle_clans_redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - idle_clans_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:
+  redis_data:
+  app_storage:
+  bundle_cache:
+
+networks:
+  idle_clans_network:
+    driver: bridge

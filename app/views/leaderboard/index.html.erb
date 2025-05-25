@@ -1,0 +1,115 @@
+<div class="row">
+  <div class="col-12">
+    <h1>🏆 Einhornpunkte Rangliste</h1>
+    
+    <!-- Zeitraum-Navigation -->
+    <ul class="nav nav-pills mb-4">
+      <li class="nav-item">
+        <%= link_to "Heute", leaderboard_period_path('today'), 
+            class: "nav-link #{'active' if @current_period == :today}" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Diese Woche", leaderboard_period_path('week'), 
+            class: "nav-link #{'active' if @current_period == :week}" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Alle Zeit", root_path, 
+            class: "nav-link #{'active' if @current_period == :all}" %>
+      </li>
+    </ul>
+    
+    <!-- Statistiken -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h5>Aktive Mitglieder</h5>
+            <h2 class="text-primary"><%= @total_members %></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h5>Gesamtpunkte</h5>
+            <h2 class="text-success"><%= number_with_delimiter(@total_donations.to_i) %></h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h5>Zeitraum</h5>
+            <h2 class="text-info">
+              <%= case @current_period
+                  when :today then "Heute"
+                  when :week then "Diese Woche"
+                  else "Alle Zeit"
+                  end %>
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Rangliste -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Rangliste</h5>
+      </div>
+      <div class="card-body">
+        <% if @members.any? %>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Rang</th>
+                  <th>Spieler</th>
+                  <th class="text-end">Punkte</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @members.each_with_index do |member, index| %>
+                  <tr>
+                    <td>
+                      <span class="badge bg-<%= index < 3 ? 'warning' : 'secondary' %>">
+                        #<%= index + 1 %>
+                      </span>
+                    </td>
+                    <td>
+                      <strong><%= member.username %></strong>
+                    </td>
+                    <td class="text-end">
+                    <span class="text-success">
+                        <%= number_with_delimiter(
+                        case @current_period
+                        when :today 
+                            member.respond_to?(:daily_points) ? member.daily_points.to_i : 0
+                        when :week 
+                            member.respond_to?(:weekly_points) ? member.weekly_points.to_i : 0
+                        else 
+                            member.total_points.to_i
+                        end
+                        ) %>
+                    </span>
+                    </td>
+                    <td>
+                      <%= link_to "Details", member_path(member.username), 
+                          class: "btn btn-sm btn-outline-primary" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="alert alert-info">
+            <h5>Keine Daten verfügbar</h5>
+            <p>Für den gewählten Zeitraum sind noch keine Spenden vorhanden.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
