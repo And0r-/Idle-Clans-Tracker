@@ -83,36 +83,54 @@
             <% if @deposits.any? %>
               <div class="table-responsive">
                 <table class="table table-sm">
-                  <thead>
+                    <thead>
                     <tr>
-                      <th>Datum</th>
-                      <th>Item</th>
-                      <th class="text-end">Anzahl</th>
-                      <th class="text-end">Punkte</th>
+                        <th>Datum</th>
+                        <th>Item</th>
+                        <th class="text-end">Anzahl</th>
+                        <th class="text-end">Punkte</th>
+                        <% if admin_features_enabled? %>
+                        <th class="text-center">Admin</th>
+                        <% end %>
                     </tr>
-                  </thead>
+                    </thead>
                   <tbody>
                     <% @deposits.each do |donation| %>
-                      <tr>
+                    <tr class="<%= 'table-warning' if donation.excluded? %>">
                         <td>
-                          <small class="text-muted">
+                        <small class="text-muted">
                             <%= l(donation.occurred_at.in_time_zone('Europe/Zurich'), format: :short) %>
-                          </small>
+                        </small>
                         </td>
                         <td>
-                          <span class="badge bg-light text-dark">
+                        <span class="badge bg-light text-dark">
                             <%= donation.item_name %>
-                          </span>
+                        </span>
+                        <% if donation.excluded? %>
+                            <span class="badge bg-warning text-dark ms-1">Ignoriert</span>
+                        <% end %>
                         </td>
                         <td class="text-end">
-                          <%= number_with_delimiter(donation.quantity) %>x
+                        <%= number_with_delimiter(donation.quantity) %>x
                         </td>
                         <td class="text-end">
-                          <span class="text-success fw-bold">
-                            +<%= number_with_delimiter(donation.points_value.to_i) %>
-                          </span>
+                        <span class="<%= donation.excluded? ? 'text-muted text-decoration-line-through' : 'text-success fw-bold' %>">
+                            +<%= number_with_delimiter(donation.calculated_points.to_i) %>
+                        </span>
                         </td>
-                      </tr>
+                        <% if admin_features_enabled? %>
+                        <td class="text-center">
+                            <%= button_to toggle_donation_excluded_path(donation), 
+                                method: :patch, 
+                                class: "btn btn-sm #{ donation.excluded? ? 'btn-outline-success' : 'btn-outline-warning' }",
+                                title: donation.excluded? ? 'Spende wieder zählen' : 'Spende ignorieren',
+                                form: { style: 'display: inline;' },
+                                data: { confirm: donation.excluded? ? 'Spende wieder zählen?' : 'Spende wirklich ignorieren?' } do %>
+                            <%= donation.excluded? ? '✓ Zählen' : '✗ Ignorieren' %>
+                            <% end %>
+                        </td>
+                        <% end %>
+                    </tr>
                     <% end %>
                   </tbody>
                 </table>

@@ -1,11 +1,21 @@
 class MembersController < ApplicationController
-  before_action :set_period
-  before_action :set_member
+  before_action :set_period, only: [:show]
+  before_action :set_member, only: [:show]
   
   def show
     @deposits = filtered_donations('deposit').limit(100)
     @withdraws = filtered_donations('withdraw').limit(100)
     @period_points = calculate_period_points
+  end
+  
+  def toggle_donation_excluded
+    @donation = Donation.find(params[:donation_id])
+    @donation.update!(excluded: !@donation.excluded?)
+    
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: member_path(@donation.member.username)) }
+      format.json { render json: { excluded: @donation.excluded? } }
+    end
   end
   
   private

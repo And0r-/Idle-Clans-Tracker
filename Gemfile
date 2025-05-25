@@ -73,3 +73,5 @@ gem 'dotenv-rails'
 
 # HTTP Client
 gem 'httparty'
+
+gem 'devise'

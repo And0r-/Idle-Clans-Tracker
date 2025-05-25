@@ -1,2 +1,42 @@
-<h1>Admin::ItemValues#edit</h1>
-<p>Find me in app/views/admin/item_values/edit.html.erb</p>
+<div class="row">
+  <div class="col-md-6">
+    <h1>✏️ Item bearbeiten</h1>
+    
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><%= @item_value.item_name %></h5>
+      </div>
+      <div class="card-body">
+        <%= form_with model: [:admin, @item_value], local: true do |form| %>
+          <% if @item_value.errors.any? %>
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                <% @item_value.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          
+          <div class="mb-3">
+            <%= form.label :points_per_unit, "Punkte pro Einheit", class: "form-label" %>
+            <%= form.number_field :points_per_unit, step: 0.01, class: "form-control" %>
+          </div>
+          
+          <div class="mb-3">
+            <div class="form-check">
+              <%= form.check_box :active, class: "form-check-input" %>
+              <%= form.label :active, "Item ist aktiv", class: "form-check-label" %>
+            </div>
+            <small class="text-muted">Inaktive Items geben 0 Punkte</small>
+          </div>
+          
+          <div class="d-flex justify-content-between">
+            <%= link_to "Abbrechen", admin_item_values_path, class: "btn btn-secondary" %>
+            <%= form.submit "Speichern", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

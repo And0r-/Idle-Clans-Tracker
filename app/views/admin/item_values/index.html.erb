@@ -1,2 +1,58 @@
-<h1>Admin::ItemValues#index</h1>
-<p>Find me in app/views/admin/item_values/index.html.erb</p>
+<div class="alert alert-warning d-flex align-items-center mb-4">
+  <span class="me-2">🔧</span>
+  <div>
+    <strong>Admin-Modus</strong> - Du kannst hier Item-Werte anpassen und Spenden verwalten.
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <h1>🎯 Item-Werte verwalten</h1>
+    <p class="text-muted">Hier kannst du die Punktwerte für verschiedene Items anpassen.</p>
+    
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Item-Punktwerte</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="text-end">Punkte pro Einheit</th>
+                <th class="text-center">Aktiv</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @item_values.each do |item_value| %>
+                <tr class="<%= 'table-secondary' unless item_value.active? %>">
+                  <td>
+                    <strong><%= item_value.item_name %></strong>
+                  </td>
+                  <td class="text-end">
+                    <span class="badge bg-<%= item_value.active? ? 'primary' : 'secondary' %>">
+                      <%= number_with_delimiter(item_value.points_per_unit.to_i) %>
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <% if item_value.active? %>
+                      <span class="text-success">✓ Aktiv</span>
+                    <% else %>
+                      <span class="text-muted">✗ Inaktiv</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= link_to "Bearbeiten", edit_admin_item_value_path(item_value), 
+                        class: "btn btn-sm btn-outline-primary" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
