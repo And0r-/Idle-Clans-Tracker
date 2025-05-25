@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: idle_clans_postgres_dev
+    environment:
+      POSTGRES_DB: idle_clans_tracker_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: development_password
+      POSTGRES_ROOT_PASSWORD: development_password
+    ports:
+      - "5433:5432"  # Custom port to avoid conflicts
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: idle_clans_redis_dev
+    ports:
+      - "6380:6379"  # Custom port to avoid conflicts
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
