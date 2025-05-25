@@ -33,4 +33,49 @@ module ApplicationHelper
       'success'
     end
   end
+
+# In app/helpers/application_helper.rb ergänzen:
+  def period_display_name(period)
+    case period
+    when :today
+      "Heute"
+    when :week
+      # Aktuelle Woche: Sonntag bis Samstag
+      zurich_now = Time.current.in_time_zone('Europe/Zurich')
+      week_start = zurich_now.beginning_of_week(:sunday)
+      # KORREKTUR: 6 Tage nach Sonntag = Samstag
+      week_end = week_start + 6.days
+      
+      # Deutsche Wochentage
+      german_weekdays = {
+        'Sunday' => 'So', 'Monday' => 'Mo', 'Tuesday' => 'Di', 
+        'Wednesday' => 'Mi', 'Thursday' => 'Do', 'Friday' => 'Fr', 'Saturday' => 'Sa'
+      }
+      
+      start_day_german = german_weekdays[week_start.strftime('%A')]
+      end_day_german = german_weekdays[week_end.strftime('%A')]
+      
+      start_date = week_start.strftime('%d.%m.')
+      end_date = week_end.strftime('%d.%m.')
+      
+      "#{start_day_german} #{start_date} - #{end_day_german} #{end_date}"
+    when :all
+      "Alle Zeit"
+    else
+      period.to_s.humanize
+    end
+  end
+
+  def period_short_name(period)
+    case period
+    when :today
+      "Heute"
+    when :week
+      "Diese Woche"
+    when :all
+      "Alle Zeit"
+    else
+      period.to_s.humanize
+    end
+  end
 end

@@ -86,52 +86,48 @@
     
     <!-- Zeitraum-Navigation -->
     <ul class="nav nav-pills mb-4">
-      <li class="nav-item">
-        <%= link_to "Heute", leaderboard_period_path('today'), 
+    <li class="nav-item">
+        <%= link_to period_short_name(:today), leaderboard_period_path('today'), 
             class: "nav-link #{'active' if @current_period == :today}" %>
-      </li>
-      <li class="nav-item">
-        <%= link_to "Diese Woche", leaderboard_period_path('week'), 
+    </li>
+    <li class="nav-item">
+        <%= link_to period_short_name(:week), leaderboard_period_path('week'), 
             class: "nav-link #{'active' if @current_period == :week}" %>
-      </li>
-      <li class="nav-item">
-        <%= link_to "Alle Zeit", root_path, 
+    </li>
+    <li class="nav-item">
+        <%= link_to period_short_name(:all), root_path, 
             class: "nav-link #{'active' if @current_period == :all}" %>
-      </li>
+    </li>
     </ul>
-    
+
     <!-- Statistiken -->
     <div class="row mb-4">
-      <div class="col-md-4">
+    <div class="col-md-4">
         <div class="card bg-light">
-          <div class="card-body text-center">
+        <div class="card-body text-center">
             <h5>Aktive Mitglieder</h5>
             <h2 class="text-primary"><%= @total_members %></h2>
-          </div>
         </div>
-      </div>
-      <div class="col-md-4">
+        </div>
+    </div>
+    <div class="col-md-4">
         <div class="card bg-light">
-          <div class="card-body text-center">
+        <div class="card-body text-center">
             <h5>Gesamtpunkte</h5>
             <h2 class="text-success"><%= number_with_delimiter(@total_donations.to_i) %></h2>
-          </div>
         </div>
-      </div>
-      <div class="col-md-4">
+        </div>
+    </div>
+    <div class="col-md-4">
         <div class="card bg-light">
-          <div class="card-body text-center">
+        <div class="card-body text-center">
             <h5>Zeitraum</h5>
             <h2 class="text-info">
-              <%= case @current_period
-                  when :today then "Heute"
-                  when :week then "Diese Woche"
-                  else "Alle Zeit"
-                  end %>
+            <%= period_display_name(@current_period) %>
             </h2>
-          </div>
         </div>
-      </div>
+        </div>
+    </div>
     </div>
     
     <!-- Rangliste -->

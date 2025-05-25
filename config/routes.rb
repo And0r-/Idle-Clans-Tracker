@@ -22,4 +22,8 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :item_values, only: [:index, :edit, :update]
   end
+
+  if Rails.env.development?
+    get '/debug/champions', to: 'debug#champions'
+  end
 end
