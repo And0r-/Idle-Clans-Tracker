@@ -81,18 +81,16 @@
                       <strong><%= member.username %></strong>
                     </td>
                     <td class="text-end">
-                    <span class="text-success">
-                        <%= number_with_delimiter(
-                        case @current_period
-                        when :today 
-                            member.respond_to?(:daily_points) ? member.daily_points.to_i : 0
-                        when :week 
-                            member.respond_to?(:weekly_points) ? member.weekly_points.to_i : 0
-                        else 
-                            member.total_points.to_i
-                        end
-                        ) %>
-                    </span>
+                        <span class="text-success">
+                            <%= number_with_delimiter(
+                            case @current_period
+                            when :today, :week
+                                member.period_points.to_i
+                            else 
+                                member.total_points.to_i
+                            end
+                            ) %>
+                        </span>
                     </td>
                     <td>
                       <%= link_to "Details", member_path(member.username), 

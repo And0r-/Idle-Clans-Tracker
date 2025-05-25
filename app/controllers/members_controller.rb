@@ -35,6 +35,9 @@ class MembersController < ApplicationController
   end
   
   def calculate_period_points
-    filtered_donations('deposit').sum(:points_value)
+    filtered_donations('deposit')
+      .counted
+      .joins('LEFT JOIN item_values ON donations.item_name = item_values.item_name AND item_values.active = true')
+      .sum('donations.quantity * COALESCE(item_values.points_per_unit, 0)')
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_25_170611) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_195232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,12 +36,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_170611) do
     t.integer "transaction_type"
     t.string "item_name"
     t.integer "quantity"
-    t.decimal "points_value"
     t.text "raw_message"
     t.datetime "occurred_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "member_username", null: false
+    t.boolean "excluded"
   end
 
   create_table "item_values", force: :cascade do |t|
@@ -55,7 +55,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_170611) do
 
   create_table "members", force: :cascade do |t|
     t.string "username"
-    t.decimal "total_points"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["username"], name: "index_members_on_username", unique: true

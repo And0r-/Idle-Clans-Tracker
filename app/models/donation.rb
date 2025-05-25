@@ -5,15 +5,18 @@ class Donation < ApplicationRecord
   
   validates :item_name, presence: true
   validates :quantity, presence: true, numericality: { greater_than: 0 }
-  validates :points_value, presence: true, numericality: true
   validates :member_username, presence: true
   
-  after_save :update_member_points
-  after_destroy :update_member_points
+  # Scope für nicht-ausgeschlossene Donations
+  scope :counted, -> { where(excluded: [false, nil]) }
+  scope :excluded, -> { where(excluded: true) }
   
-  private
-  
-  def update_member_points
-    member.update_total_points!
+  # Live-Berechnung der Punkte
+  def calculated_points
+    return 0 if excluded?
+    ItemValue.points_for(item_name, quantity)
   end
+  
+  # Alias für Backward-Compatibility in Views
+  alias_method :points_value, :calculated_points
 end

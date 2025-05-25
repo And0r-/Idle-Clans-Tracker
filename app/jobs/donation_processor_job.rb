@@ -50,23 +50,20 @@ class DonationProcessorJob < ApplicationJob
     
     # Find or create member
     member = Member.find_or_create_by(username: username) do |m|
-      m.total_points = 0
+      # total_points wird nicht mehr gesetzt - wird live berechnet
     end
     
-    # Calculate points
-    points_value = ItemValue.points_for(item_name, quantity)
-    
-    # Create donation
+    # Create donation OHNE points_value
     Donation.create!(
-      member_username: username,  # Direkt den username setzen
+      member_username: username,
       transaction_type: transaction_type,
       item_name: item_name,
       quantity: quantity,
-      points_value: points_value,
+      # points_value: ENTFERNT - wird live berechnet
       raw_message: clan_log.message,
       occurred_at: clan_log.timestamp
     )
     
-    Rails.logger.info "💰 #{transaction_type.capitalize}: #{username} - #{quantity}x #{item_name} (#{points_value} points)"
+    Rails.logger.info "💰 #{transaction_type.capitalize}: #{username} - #{quantity}x #{item_name}"
   end
 end
