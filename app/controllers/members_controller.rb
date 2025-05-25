@@ -34,10 +34,12 @@ class MembersController < ApplicationController
     
     case @period
     when :today
-      base_query.where(occurred_at: Date.current.beginning_of_day..Date.current.end_of_day)
+      today_start = Time.current.in_time_zone('Europe/Zurich').beginning_of_day
+      today_end = Time.current.in_time_zone('Europe/Zurich').end_of_day
+      base_query.where(occurred_at: today_start..today_end)
     when :week
-      week_start = Date.current.beginning_of_week(:sunday)
-      week_end = week_start.end_of_week(:sunday)
+      week_start = Time.current.in_time_zone('Europe/Zurich').beginning_of_week(:sunday)
+      week_end = Time.current.in_time_zone('Europe/Zurich').end_of_week(:sunday)
       base_query.where(occurred_at: week_start..week_end)
     else
       base_query

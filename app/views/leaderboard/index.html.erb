@@ -1,6 +1,88 @@
 <div class="row">
   <div class="col-12">
     <h1>🏆 Einhornpunkte Rangliste</h1>
+
+    <!-- Champions Dashboard -->
+    <div class="row mb-4">
+    <div class="col-12">
+        <div class="card" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+        <div class="card-body text-white">
+            <h5 class="card-title mb-3 text-white">👑 Hall of Fame</h5>
+            <div class="row g-3">
+            <!-- All-Time Champion -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="text-center text-white">
+                <div class="fs-4">🏅</div>
+                <div class="fw-bold">All-Time King</div>
+                <% if @champions[:all_time] %>
+                    <div class="fs-6 text-white"><%= @champions[:all_time].username %></div>
+                    <small class="text-white-50"><%= number_with_delimiter(@champions[:all_time].total_points.to_i) %> Punkte</small>
+                <% else %>
+                    <div class="text-white-50">Noch keiner</div>
+                <% end %>
+                </div>
+            </div>
+            
+            <!-- Last Week Champion -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="text-center text-white">
+                <div class="fs-4">🥇</div>
+                <div class="fw-bold">Letzte Woche</div>
+                <% if @champions[:last_week] %>
+                    <div class="fs-6 text-white"><%= @champions[:last_week].username %></div>
+                    <small class="text-white-50"><%= number_with_delimiter(@champions[:last_week].total_points.to_i) %> Punkte</small>
+                <% else %>
+                    <div class="text-white-50">Keine Daten</div>
+                <% end %>
+                </div>
+            </div>
+            
+            <!-- This Week Leader -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="text-center text-white">
+                <div class="fs-4">⭐</div>
+                <div class="fw-bold">Diese Woche</div>
+                <% if @champions[:this_week] %>
+                    <div class="fs-6 text-white"><%= @champions[:this_week].username %></div>
+                    <small class="text-white-50"><%= number_with_delimiter(@champions[:this_week].total_points.to_i) %> Punkte</small>
+                <% else %>
+                    <div class="text-white-50">Noch keiner</div>
+                <% end %>
+                </div>
+            </div>
+            
+            <!-- Yesterday Champion -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="text-center text-white">
+                <div class="fs-4">🌟</div>
+                <div class="fw-bold">Gestern</div>
+                <% if @champions[:yesterday] %>
+                    <div class="fs-6 text-white"><%= @champions[:yesterday].username %></div>
+                    <small class="text-white-50"><%= number_with_delimiter(@champions[:yesterday].total_points.to_i) %> Punkte</small>
+                <% else %>
+                    <div class="text-white-50">Keine Daten</div>
+                <% end %>
+                </div>
+            </div>
+            
+            <!-- Today Leader -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="text-center text-white">
+                <div class="fs-4">🔥</div>
+                <div class="fw-bold">Heute</div>
+                <% if @champions[:today] %>
+                    <div class="fs-6 text-white"><%= @champions[:today].username %></div>
+                    <small class="text-white-50"><%= number_with_delimiter(@champions[:today].total_points.to_i) %> Punkte</small>
+                <% else %>
+                    <div class="text-white-50">Noch keiner</div>
+                <% end %>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
     
     <!-- Zeitraum-Navigation -->
     <ul class="nav nav-pills mb-4">
