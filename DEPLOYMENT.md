@@ -23,15 +23,15 @@ cp .env.production .env
 docker run --rm ruby:3.2-alpine -c "gem install rails && rails secret"
 ```
 
-### 4. Container starten
+### 4. Container bauen und starten
 ```bash
-# Starten (kein Build nötig!)
-docker-compose -f docker-compose.production.yml up -d
+# Bauen und starten
+docker-compose up -d --build
 
 # Database Setup (nur beim ersten Mal)
-docker-compose -f docker-compose.production.yml exec app bundle exec rails db:create
-docker-compose -f docker-compose.production.yml exec app bundle exec rails db:migrate
-docker-compose -f docker-compose.production.yml exec app bundle exec rails db:seed
+docker-compose exec app bundle exec rails db:create
+docker-compose exec app bundle exec rails db:migrate
+docker-compose exec app bundle exec rails db:seed
 ```
 
 ### 5. Logs prüfen
@@ -87,7 +87,7 @@ server {
 ### Code-Updates
 ```bash
 git pull origin main
-docker-compose -f docker-compose.production.yml restart app sidekiq
+docker-compose up -d --build
 ```
 
 ### Database-Migrations
