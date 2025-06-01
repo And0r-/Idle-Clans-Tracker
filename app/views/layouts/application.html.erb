@@ -6,7 +6,8 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Theme CSS wird dynamisch geladen -->
+    <link id="theme-css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -37,6 +38,58 @@
           </ul>
           
           <ul class="navbar-nav">
+            <!-- Theme Selector -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="themeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span id="current-theme-icon">🎨</span>
+                <span class="ms-2 d-none d-md-inline" id="current-theme-name">Theme</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeDropdown">
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('default')">
+                    <span class="me-2">☀️</span>
+                    Standard (Bootstrap)
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('darkly')">
+                    <span class="me-2">🌙</span>
+                    Dark (Darkly)
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('cyborg')">
+                    <span class="me-2">🤖</span>
+                    Cyborg
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('vapor')">
+                    <span class="me-2">🔮</span>
+                    Cyberpunk (Vapor)
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('slate')">
+                    <span class="me-2">⚫</span>
+                    Elegant (Slate)
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('solar')">
+                    <span class="me-2">🟠</span>
+                    Solar
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="#" onclick="switchTheme('superhero')">
+                    <span class="me-2">🦸</span>
+                    Superhero
+                  </a>
+                </li>
+              </ul>
+            </li>
+
             <% if user_signed_in? %>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
@@ -98,5 +151,162 @@
     <div class="container mt-4">
       <%= yield %>
     </div>
+
+    <!-- Intelligenter Theme Switcher mit Tabellen-Support -->
+    <script>
+      const themes = {
+        default: { 
+          name: 'Standard', 
+          icon: '☀️', 
+          url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
+          isDark: false
+        },
+        darkly: { 
+          name: 'Dark', 
+          icon: '🌙', 
+          url: 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/darkly/bootstrap.min.css',
+          isDark: true
+        },
+        cyborg: { 
+          name: 'Cyborg', 
+          icon: '🤖', 
+          url: 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/cyborg/bootstrap.min.css',
+          isDark: true
+        },
+        vapor: { 
+          name: 'Cyberpunk', 
+          icon: '🔮', 
+          url: 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/vapor/bootstrap.min.css',
+          isDark: true
+        },
+        slate: { 
+          name: 'Elegant', 
+          icon: '⚫', 
+          url: 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/slate/bootstrap.min.css',
+          isDark: true
+        },
+        solar: { 
+          name: 'Solar', 
+          icon: '🟠', 
+          url: 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/solar/bootstrap.min.css',
+          isDark: true
+        },
+        superhero: { 
+          name: 'Superhero', 
+          icon: '🦸', 
+          url: 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/superhero/bootstrap.min.css',
+          isDark: true
+        }
+      };
+
+      function switchTheme(themeName) {
+        const theme = themes[themeName];
+        if (!theme) return;
+
+        // CSS wechseln
+        const themeLink = document.getElementById('theme-css');
+        themeLink.href = theme.url;
+
+        // Display aktualisieren
+        document.getElementById('current-theme-icon').textContent = theme.icon;
+        document.getElementById('current-theme-name').textContent = theme.name;
+
+        // Tabellen anpassen
+        updateTablesForTheme(theme.isDark);
+
+        // Theme speichern
+        localStorage.setItem('idle-clans-theme', themeName);
+
+        console.log(`🎨 Theme gewechselt zu: ${theme.name} (Dark: ${theme.isDark})`);
+      }
+
+      function updateTablesForTheme(isDark) {
+        const tables = document.querySelectorAll('.table');
+        
+        tables.forEach(table => {
+          if (isDark) {
+            // Für dunkle Themes: table-dark hinzufügen
+            if (!table.classList.contains('table-dark')) {
+              table.classList.add('table-dark');
+            }
+          } else {
+            // Für helle Themes: table-dark entfernen
+            table.classList.remove('table-dark');
+          }
+        });
+
+        console.log(`📊 ${tables.length} Tabellen für ${isDark ? 'dunkles' : 'helles'} Theme angepasst`);
+      }
+
+      // Gespeichertes Theme laden
+      function loadSavedTheme() {
+        const savedTheme = localStorage.getItem('idle-clans-theme') || 'default';
+        switchTheme(savedTheme);
+      }
+
+      // Theme beim Laden setzen
+      document.addEventListener('DOMContentLoaded', loadSavedTheme);
+      
+      // Für Turbo (Rails) - auch bei Navigation
+      document.addEventListener('turbo:load', () => {
+        const savedTheme = localStorage.getItem('idle-clans-theme') || 'default';
+        const theme = themes[savedTheme];
+        
+        // Display aktualisieren (CSS ist schon geladen)
+        if (document.getElementById('current-theme-icon')) {
+          document.getElementById('current-theme-icon').textContent = theme.icon;
+          document.getElementById('current-theme-name').textContent = theme.name;
+        }
+        
+        // Tabellen für aktuelles Theme anpassen
+        if (theme) {
+          updateTablesForTheme(theme.isDark);
+        }
+      });
+
+      // Keyboard-Shortcut für Theme-Wechsel
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.code === 'KeyT') {
+          e.preventDefault();
+          
+          const themeKeys = Object.keys(themes);
+          const currentTheme = localStorage.getItem('idle-clans-theme') || 'default';
+          const currentIndex = themeKeys.indexOf(currentTheme);
+          const nextIndex = (currentIndex + 1) % themeKeys.length;
+          const nextTheme = themeKeys[nextIndex];
+          
+          switchTheme(nextTheme);
+          
+          // Toast-Benachrichtigung
+          showThemeToast(themes[nextTheme]);
+        }
+      });
+
+      function showThemeToast(theme) {
+        const toast = document.createElement('div');
+        toast.className = 'position-fixed bottom-0 end-0 p-3';
+        toast.style.zIndex = '9999';
+        toast.innerHTML = `
+          <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <span class="me-2">${theme.icon}</span>
+              <strong class="me-auto">Theme geändert</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              ${theme.name} aktiviert
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 3000);
+      }
+    </script>
   </body>
 </html>
