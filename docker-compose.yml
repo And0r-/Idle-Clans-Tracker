@@ -10,6 +10,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       CLAN_NAME: ${CLAN_NAME:-RosaEinhorn}
+      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
     depends_on:
       - postgres
       - redis
@@ -31,6 +32,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       CLAN_NAME: ${CLAN_NAME:-RosaEinhorn}
+      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
     depends_on:
       - postgres
       - redis
