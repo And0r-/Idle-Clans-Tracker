@@ -21,6 +21,12 @@ Rails.application.routes.draw do
   # Admin-Bereich
   namespace :admin do
     resources :item_values, only: [:index, :edit, :update]
+    
+    resources :discord_settings, except: [:show] do
+      collection do
+        post :test_webhook
+      end
+    end
   end
 
   if Rails.env.development?

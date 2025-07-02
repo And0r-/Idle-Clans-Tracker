@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="col-md-8">
+    <h1>
+      <% if @discord_setting.keyword_type == 'include' %>
+        ✅ Include-Keyword bearbeiten
+      <% else %>
+        ❌ Exclude-Keyword bearbeiten
+      <% end %>
+    </h1>
+    
+    <div class="card">
+      <div class="card-body">
+        <%= render 'form', discord_setting: @discord_setting %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="mb-0">ℹ️ Keyword-Info</h6>
+      </div>
+      <div class="card-body">
+        <p><strong>Typ:</strong> 
+          <% if @discord_setting.keyword_type == 'include' %>
+            <span class="badge bg-success">Include</span>
+          <% else %>
+            <span class="badge bg-danger">Exclude</span>
+          <% end %>
+        </p>
+        
+        <p><strong>Erstellt:</strong><br>
+          <small><%= @discord_setting.created_at.in_time_zone('Europe/Zurich').strftime('%d.%m.%Y %H:%M') %></small>
+        </p>
+        
+        <% if @discord_setting.updated_at != @discord_setting.created_at %>
+          <p><strong>Zuletzt geändert:</strong><br>
+            <small><%= @discord_setting.updated_at.in_time_zone('Europe/Zurich').strftime('%d.%m.%Y %H:%M') %></small>
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-12 mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="mb-0">📖 Verfügbare Keywords</h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="text-success">✅ Wichtige Clan-Ereignisse</h6>
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <td><code>has joined the clan:</code></td>
+                  <td><small class="text-muted">{spieler} has joined the clan: {clan}</small></td>
+                </tr>
+                <tr>
+                  <td><code>left the clan:</code></td>
+                  <td><small class="text-muted">{spieler} left the clan: {clan}</small></td>
+                </tr>
+                <tr>
+                  <td><code>has kicked</code></td>
+                  <td><small class="text-muted">{spieler} has kicked {spieler2} from the clan.</small></td>
+                </tr>
+                <tr>
+                  <td><code>has promoted</code></td>
+                  <td><small class="text-muted">{spieler} has promoted {spieler2}</small></td>
+                </tr>
+                <tr>
+                  <td><code>has demoted</code></td>
+                  <td><small class="text-muted">{spieler} has demoted {spieler2}.</small></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="col-md-6">
+            <h6 class="text-warning">⚠️ Weitere Keywords</h6>
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <td><code>set the clan's</code></td>
+                  <td><small class="text-muted">{spieler} set the clan's {einstellung} to {wert}</small></td>
+                </tr>
+                <tr>
+                  <td><code>gave vault access</code></td>
+                  <td><small class="text-muted">{spieler} gave vault access to {spieler2}.</small></td>
+                </tr>
+                <tr>
+                  <td><code>bought the upgrade</code></td>
+                  <td><small class="text-muted">{spieler} bought the upgrade {upgrade}</small></td>
+                </tr>
+                <tr>
+                  <td><code>updated the clan's recruitment</code></td>
+                  <td><small class="text-muted">{spieler} updated the clan's recruitment message.</small></td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="alert alert-warning">
+              <strong>⚠️ Nicht empfohlen:</strong>
+              <code>added</code>, <code>withdrew</code>, <code>completed</code>, <code>event</code>
+              <br>
+              <small class="text-muted">Diese treten zu häufig auf und würden zu Spam führen.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

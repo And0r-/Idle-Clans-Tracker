@@ -45,6 +45,9 @@ class ApiPollerJob < ApplicationJob
       # Process new donations
       DonationProcessorJob.perform_later if new_logs_count > 0
       
+      # Check for clan activities and notify Discord
+      ClanActivityDetectorJob.perform_later if new_logs_count > 0
+      
     rescue => e
       # Fehler-Status setzen
       api_status.update!(status: "error: #{e.message}")

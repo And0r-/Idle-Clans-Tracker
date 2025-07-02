@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_25_212553) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_232343) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_212553) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "clan_activities", force: :cascade do |t|
+    t.string "member_username", null: false
+    t.text "message", null: false
+    t.datetime "occurred_at", null: false
+    t.boolean "discord_notified", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discord_notified"], name: "index_clan_activities_on_discord_notified"
+    t.index ["member_username", "message", "occurred_at"], name: "idx_clan_activities_unique", unique: true
+    t.index ["occurred_at"], name: "index_clan_activities_on_occurred_at"
+  end
+
   create_table "clan_logs", force: :cascade do |t|
     t.string "clan_name"
     t.string "member_username"
@@ -30,6 +42,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_212553) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "processed"
+  end
+
+  create_table "discord_settings", force: :cascade do |t|
+    t.string "keyword", null: false
+    t.string "keyword_type", null: false
+    t.boolean "active", default: true
+    t.string "emoji"
+    t.string "color_hex"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["keyword", "keyword_type"], name: "index_discord_settings_on_keyword_and_keyword_type", unique: true
+    t.index ["keyword_type", "active"], name: "index_discord_settings_on_keyword_type_and_active"
   end
 
   create_table "donations", force: :cascade do |t|

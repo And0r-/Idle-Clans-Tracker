@@ -1,0 +1,150 @@
+<div class="alert alert-info d-flex align-items-center mb-4">
+  <span class="me-2">💬</span>
+  <div>
+    <strong>Discord-Integration</strong> - Konfiguriere welche Clan-Aktivitäten an Discord gesendet werden.
+    <% if ENV['DISCORD_WEBHOOK_URL'].present? %>
+      <span class="badge bg-success ms-2">Webhook konfiguriert</span>
+    <% else %>
+      <span class="badge bg-danger ms-2">Webhook fehlt!</span>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>🔔 Discord Benachrichtigungen</h1>
+      <div>
+        <%= form_with url: test_webhook_admin_discord_settings_path, 
+            method: :post, 
+            local: true, 
+            style: "display: inline-block;" do |form| %>
+          <%= form.submit "Test senden", 
+              class: "btn btn-outline-info me-2" %>
+        <% end %>
+        <%= link_to "+ Keyword hinzufügen", new_admin_discord_setting_path(keyword_type: 'include'), 
+            class: "btn btn-primary" %>
+      </div>
+    </div>
+    
+    <!-- Include Keywords -->
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">✅ Keywords die Benachrichtigungen auslösen</h5>
+      </div>
+      <div class="card-body">
+        <% if @include_settings.any? %>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Keyword</th>
+                  <th>Emoji</th>
+                  <th>Farbe</th>
+                  <th>Beschreibung</th>
+                  <th>Aktiv</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @include_settings.each do |setting| %>
+                  <tr class="<%= 'table-secondary' unless setting.active? %>">
+                    <td>
+                      <code><%= setting.keyword %></code>
+                    </td>
+                    <td><%= setting.emoji || '📢' %></td>
+                    <td>
+                      <% if setting.color_hex.present? %>
+                        <span class="badge" style="background-color: <%= setting.color_hex %>; color: white;">
+                          <%= setting.color_hex %>
+                        </span>
+                      <% else %>
+                        <span class="text-muted">Standard</span>
+                      <% end %>
+                    </td>
+                    <td><small><%= setting.description %></small></td>
+                    <td>
+                      <% if setting.active? %>
+                        <span class="text-success">✓</span>
+                      <% else %>
+                        <span class="text-muted">✗</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to "Bearbeiten", edit_admin_discord_setting_path(setting), 
+                          class: "btn btn-sm btn-outline-primary" %>
+                      <%= link_to "Löschen", admin_discord_setting_path(setting), 
+                          method: :delete,
+                          data: { confirm: "Wirklich löschen?" },
+                          class: "btn btn-sm btn-outline-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted">Keine Keywords definiert. Füge welche hinzu!</p>
+        <% end %>
+        
+        <%= link_to "+ Weiteres Include-Keyword", 
+            new_admin_discord_setting_path(keyword_type: 'include'), 
+            class: "btn btn-sm btn-success" %>
+      </div>
+    </div>
+    
+    <!-- Exclude Keywords -->
+    <div class="card">
+      <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">❌ Keywords die Benachrichtigungen verhindern</h5>
+      </div>
+      <div class="card-body">
+        <% if @exclude_settings.any? %>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Keyword</th>
+                  <th>Beschreibung</th>
+                  <th>Aktiv</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @exclude_settings.each do |setting| %>
+                  <tr class="<%= 'table-secondary' unless setting.active? %>">
+                    <td>
+                      <code><%= setting.keyword %></code>
+                    </td>
+                    <td><small><%= setting.description %></small></td>
+                    <td>
+                      <% if setting.active? %>
+                        <span class="text-success">✓</span>
+                      <% else %>
+                        <span class="text-muted">✗</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to "Bearbeiten", edit_admin_discord_setting_path(setting), 
+                          class: "btn btn-sm btn-outline-primary" %>
+                      <%= link_to "Löschen", admin_discord_setting_path(setting), 
+                          method: :delete,
+                          data: { confirm: "Wirklich löschen?" },
+                          class: "btn btn-sm btn-outline-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted">Keine Exclude-Keywords definiert.</p>
+        <% end %>
+        
+        <%= link_to "+ Exclude-Keyword hinzufügen", 
+            new_admin_discord_setting_path(keyword_type: 'exclude'), 
+            class: "btn btn-sm btn-danger" %>
+      </div>
+    </div>
+  </div>
+</div>

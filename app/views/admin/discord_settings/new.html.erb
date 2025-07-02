@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-8">
+    <h1>
+      <% if @discord_setting.keyword_type == 'include' %>
+        ✅ Neues Include-Keyword
+      <% else %>
+        ❌ Neues Exclude-Keyword
+      <% end %>
+    </h1>
+    
+    <div class="card">
+      <div class="card-body">
+        <%= render 'form', discord_setting: @discord_setting %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="mb-0">💡 Tipps</h6>
+      </div>
+      <div class="card-body">
+        <% if @discord_setting.keyword_type == 'include' %>
+          <strong>Include-Keywords</strong> lösen Benachrichtigungen aus.
+          <br><br>
+          <strong>Beispiele:</strong>
+          <ul class="small">
+            <li><code>joined the clan</code></li>
+            <li><code>left the clan</code></li>
+            <li><code>kicked</code></li>
+            <li><code>promoted</code></li>
+          </ul>
+        <% else %>
+          <strong>Exclude-Keywords</strong> verhindern Benachrichtigungen.
+          <br><br>
+          <strong>Beispiele:</strong>
+          <ul class="small">
+            <li><code>completed a quest</code></li>
+            <li><code>gained experience</code></li>
+            <li><code>added</code> (für Spenden)</li>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

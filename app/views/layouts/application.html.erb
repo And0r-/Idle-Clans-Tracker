@@ -32,7 +32,10 @@
             </li>
             <% if admin_features_enabled? %>
               <li class="nav-item">
-                <%= link_to "Admin", admin_item_values_path, class: "nav-link #{'active' if admin_mode?}" %>
+                <%= link_to "🎯 Item-Werte", admin_item_values_path, class: "nav-link #{'active' if controller_name == 'item_values' && admin_mode?}" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "🔔 Discord", admin_discord_settings_path, class: "nav-link #{'active' if controller_name == 'discord_settings' && admin_mode?}" %>
               </li>
             <% end %>
           </ul>
@@ -99,14 +102,6 @@
                   <% end %>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <% if current_user.admin? %>
-                    <li>
-                      <%= link_to admin_item_values_path, class: "dropdown-item" do %>
-                        🔧 Admin-Bereich
-                      <% end %>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                  <% end %>
                   <li>
                     <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
                       ⚙️ Account bearbeiten

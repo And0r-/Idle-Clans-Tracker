@@ -1,0 +1,53 @@
+<%= form_with model: [:admin, discord_setting], local: true do |form| %>
+  <% if discord_setting.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% discord_setting.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <%= form.hidden_field :keyword_type %>
+  
+  <div class="mb-3">
+    <%= form.label :keyword, "Keyword/Phrase", class: "form-label" %>
+    <%= form.text_field :keyword, class: "form-control", 
+        placeholder: "z.B. 'joined the clan' oder 'kicked'" %>
+    <small class="text-muted">
+      Groß-/Kleinschreibung wird ignoriert. Teil-Matches funktionieren.
+    </small>
+  </div>
+  
+  <% if discord_setting.keyword_type == 'include' %>
+    <div class="mb-3">
+      <%= form.label :emoji, "Emoji (optional)", class: "form-label" %>
+      <%= form.text_field :emoji, class: "form-control", placeholder: "z.B. ✅" %>
+    </div>
+    
+    <div class="mb-3">
+      <%= form.label :color_hex, "Discord-Farbe (optional)", class: "form-label" %>
+      <%= form.color_field :color_hex, class: "form-control" %>
+      <small class="text-muted">Farbe für Discord Embed</small>
+    </div>
+  <% end %>
+  
+  <div class="mb-3">
+    <%= form.label :description, "Beschreibung (optional)", class: "form-label" %>
+    <%= form.text_area :description, rows: 2, class: "form-control",
+        placeholder: "Kurze Erklärung wofür dieses Keyword ist" %>
+  </div>
+  
+  <div class="mb-3">
+    <div class="form-check">
+      <%= form.check_box :active, class: "form-check-input" %>
+      <%= form.label :active, "Aktiv", class: "form-check-label" %>
+    </div>
+  </div>
+  
+  <div class="d-flex justify-content-between">
+    <%= link_to "Abbrechen", admin_discord_settings_path, class: "btn btn-secondary" %>
+    <%= form.submit "Speichern", class: "btn btn-primary" %>
+  </div>
+<% end %>
