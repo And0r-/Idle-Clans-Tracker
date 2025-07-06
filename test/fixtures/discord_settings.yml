@@ -1,0 +1,79 @@
+# Discord Settings fixtures for testing
+
+# INCLUDE Keywords (should trigger Discord notifications)
+promotion_include:
+  keyword: "has promoted"
+  keyword_type: "include"
+  active: true
+  emoji: "👑"
+  color_hex: "#FFD700"
+
+vault_access_include:
+  keyword: "gave vault access"
+  keyword_type: "include" 
+  active: true
+  emoji: "🔐"
+  color_hex: "#00FF00"
+
+demotion_include:
+  keyword: "has demoted"
+  keyword_type: "include"
+  active: true
+  emoji: "📉"
+  color_hex: "#FF0000"
+
+joined_include:
+  keyword: "has joined the clan:"
+  keyword_type: "include"
+  active: true
+  emoji: "👋"
+  color_hex: "#00BFFF"
+
+left_include:
+  keyword: "left the clan:"
+  keyword_type: "include"
+  active: true
+  emoji: "👋"
+  color_hex: "#FFA500"
+
+kicked_include:
+  keyword: "has kicked"
+  keyword_type: "include"
+  active: true
+  emoji: "🥾"
+  color_hex: "#DC143C"
+
+clan_settings_include:
+  keyword: "set the clan's"
+  keyword_type: "include"
+  active: true
+  emoji: "⚙️"
+  color_hex: "#808080"
+
+upgrade_include:
+  keyword: "bought the upgrade"
+  keyword_type: "include"
+  active: true
+  emoji: "⬆️"
+  color_hex: "#32CD32"
+
+# EXCLUDE Keywords (should NOT trigger Discord notifications)
+quest_exclude:
+  keyword: "completed a quest"
+  keyword_type: "exclude"
+  active: true
+
+donation_exclude:
+  keyword: "added"
+  keyword_type: "exclude"
+  active: true
+
+withdrawal_exclude:
+  keyword: "withdrew"
+  keyword_type: "exclude"
+  active: true
+
+experience_exclude:
+  keyword: "gained experience"
+  keyword_type: "exclude"
+  active: true

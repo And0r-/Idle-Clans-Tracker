@@ -1,11 +1,6 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# API Status fixtures for testing
 
-one:
-  last_fetch_at: 2025-05-25 19:06:11
-  status: MyString
-  logs_imported: 1
-
-two:
-  last_fetch_at: 2025-05-25 19:06:11
-  status: MyString
-  logs_imported: 1
+default:
+  status: "success"
+  logs_imported: 0
+  last_fetch_at: <%= 1.hour.ago %>

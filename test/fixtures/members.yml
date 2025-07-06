@@ -1,9 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Member fixtures for testing
 
-one:
-  username: MyString
-  total_points: 9.99
+testuser1:
+  username: "TestUser1"
 
-two:
-  username: MyString
-  total_points: 9.99
+testuser2:
+  username: "TestUser2"
+
+obstii:
+  username: "Obstii"
+
+lemoniscool:
+  username: "lemoniscooI"

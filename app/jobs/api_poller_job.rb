@@ -42,11 +42,16 @@ class ApiPollerJob < ApplicationJob
       
       Rails.logger.info "✅ API poll completed. Imported #{new_logs_count} new logs"
       
-      # Process new donations
-      DonationProcessorJob.perform_later if new_logs_count > 0
-      
-      # Check for clan activities and notify Discord
-      ClanActivityDetectorJob.perform_later if new_logs_count > 0
+      # Queue background jobs only if we imported new logs
+      # Important: This happens AFTER all database transactions are committed
+      # to avoid race conditions where jobs can't see the new records
+      if new_logs_count > 0
+        # Small delay to ensure database replication in production environments
+        DonationProcessorJob.set(wait: 1.second).perform_later
+        ClanActivityDetectorJob.set(wait: 1.second).perform_later
+        
+        Rails.logger.info "📋 Queued background jobs for #{new_logs_count} new logs"
+      end
       
     rescue => e
       # Fehler-Status setzen

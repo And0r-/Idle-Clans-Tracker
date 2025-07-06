@@ -1,11 +1,16 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Item Value fixtures for testing
 
-one:
-  item_name: MyString
-  points_per_unit: 9.99
-  active: false
+gold_bar:
+  item_name: "Gold bar"
+  points_per_unit: 10.0
+  active: true
 
-two:
-  item_name: MyString
-  points_per_unit: 9.99
-  active: false
+magic_logs:
+  item_name: "Magic logs"
+  points_per_unit: 5.0
+  active: true
+
+titanium_bar:
+  item_name: "Titanium bar"
+  points_per_unit: 20.0
+  active: true
